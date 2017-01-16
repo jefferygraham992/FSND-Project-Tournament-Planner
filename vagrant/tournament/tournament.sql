@@ -52,10 +52,7 @@ CREATE VIEW odds AS
             FROM
             (SELECT *, row_number() over (ORDER BY standings.wins DESC) AS rnum FROM standings) AS q WHERE mod(rnum, 2) != 0;
 
-CREATE VIEW pairings AS
-            SELECT odds.id, odds.name, evens.id, evens.name
-            FROM odds INNER JOIN evens
-            ON (odds.rnum) = (evens.rnum - 1);
+
 
 
 
