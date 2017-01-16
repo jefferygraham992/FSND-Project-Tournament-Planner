@@ -4,8 +4,6 @@
 #
 
 import psycopg2
-import bleach
-
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
@@ -34,13 +32,10 @@ def countPlayers():
     """Returns the number of players currently registered."""
     db = connect()
     cursor = db.cursor()
-    cursor.execute("SELECT COUNT(id) AS num FROM players")
+    cursor.execute("SELECT COUNT(id) FROM players")
     results = cursor.fetchone()
     db.close()
-    if results:
-        return results[0]
-    else:
-        return '0'
+    return results[0]
 
 
 def registerPlayer(name):
@@ -54,11 +49,9 @@ def registerPlayer(name):
     """
     db = connect()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO players (name) VALUES(%s)", (bleach.clean(name),))
+    cursor.execute("INSERT INTO players (name) VALUES(%s)", (name,))
     db.commit()
     db.close()
-
-
 
 
 def playerStandings():
@@ -91,7 +84,7 @@ def reportMatch(winner, loser):
     """
     db = connect()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s); ", (bleach.clean(winner), bleach.clean(loser)))
+    cursor.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s); ", (winner, loser))
     db.commit()
     db.close()
 

@@ -16,8 +16,8 @@ CREATE TABLE players (id SERIAL PRIMARY KEY,
 
 -- matches table
 CREATE TABLE matches (id SERIAL PRIMARY KEY,
-                                       winner INTEGER REFERENCES players (id),
-                                       loser INTEGER REFERENCES players (id));
+                                       winner INT REFERENCES players (id) ON DELETE CASCADE,
+                                       loser INT REFERENCES players (id) ON DELETE CASCADE);
 
 -- wins view
 CREATE VIEW num_wins AS
@@ -35,13 +35,14 @@ CREATE VIEW num_losses AS
             GROUP BY players.id, players.name
             ORDER BY losses;
 
--- view from creating the standings
+-- view for creating the standings
 CREATE VIEW standings AS
             SELECT num_wins.id, num_wins.name, num_wins.wins, num_wins.wins + num_losses.losses as matches
             FROM num_losses JOIN num_wins
             ON num_losses.id = num_wins.id
             ORDER BY num_wins.wins DESC, num_wins.id ASC;
 
+-- views for creating swiss pairings
 CREATE VIEW evens AS
             SELECT rnum, id, name
             FROM
